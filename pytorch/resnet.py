@@ -7,7 +7,7 @@ from utils import conv_params, linear_params, bnparams, bnstats, \
 def resnet(depth, width, num_classes):
     assert (depth - 4) % 6 == 0, 'depth should be 6n+4'
     n = (depth - 4) // 6
-    widths = torch.Tensor([16, 32, 64]).mul(width).int()
+    widths = [int(x * width) for x in [16, 32, 64]]
 
     def gen_block_params(ni, no):
         return {

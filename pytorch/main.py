@@ -73,8 +73,8 @@ def create_dataset(opt, train):
             T.RandomCrop(32),
             transform
         ])
-
     ds = getattr(datasets, opt.dataset)(opt.dataroot, train=train, download=True, transform=transform)
+
     if train:
         ds.train_data = np.pad(ds.train_data, ((0,0), (4,4), (4,4), (0,0)), mode='reflect')
     return ds
@@ -140,7 +140,7 @@ def main():
                         optimizer=state['optimizer'].state_dict(),
                         epoch=t['epoch']),
                    open(os.path.join(opt.save, 'model.pt7'), 'wb'))
-        z = vars(opt).copy(); z.update(t)
+        z = vars(opt).copy(); z.update({k:(float(v) if "_loss" in k else v) for k, v in t.items()})
         logname = os.path.join(opt.save, 'log.txt')
         with open(logname, 'a') as f:
             f.write('json_stats: ' + json.dumps(z) + '\n')
